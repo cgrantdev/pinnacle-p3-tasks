@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinnacle P3 — Dev Task Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F3EE;
+    --surface: #FFFFFF;
+    --border: #E2DDD5;
+    --text: #1A1816;
+    --muted: #7A756E;
+    --accent: #1A1816;
+
+    --shop: #1A3A5C;
+    --bab: #3B2B6E;
+    --cart: #1A4A2E;
+    --pay: #5C3A10;
+    --support: #5C1A1A;
+    --research: #0D4040;
+    --misc: #3A3530;
+
+    --tag-bug-bg: #FDDEDE; --tag-bug: #8B1F1F;
+    --tag-decision-bg: #FEF0CC; --tag-decision: #7A4008;
+    --tag-awaiting-bg: #D8ECF8; --tag-awaiting: #124A7A;
+    --tag-ready-bg: #D5EDD8; --tag-ready: #1A5C25;
+    --tag-compliance-bg: #FDDEDE; --tag-compliance: #8B1F1F;
+    --tag-audit-bg: #FDDEDE; --tag-audit: #8B1F1F;
+    --tag-ux-bg: #FEF0CC; --tag-ux: #7A4008;
+  }
+
+  html { font-size: 16px; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: var(--text);
+    color: #F5F3EE;
+    padding: 48px 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 200px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 16px;
+  }
+  .site-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: #F5F3EE;
+  }
+  .site-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-bar-outer {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    max-width: 400px;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: #A8D5BA;
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+  .progress-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    white-space: nowrap;
+  }
+
+  /* FILTERS */
+  .filters {
+    padding: 20px 48px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .filter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 4px;
+  }
+  .filter-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn:hover { border-color: var(--text); color: var(--text); }
+  .filter-btn.active { background: var(--text); color: #F5F3EE; border-color: var(--text); }
+
+  /* MAIN */
+  .main { padding: 40px 48px; max-width: 1000px; }
+
+  /* SECTION */
+  .section { margin-bottom: 48px; }
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-name {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text);
+  }
+  .section-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* TASK CARD */
+  .task-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .task-card:hover { border-color: #C8C3BB; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .task-card.done { opacity: 0.45; }
+  .task-card.done .task-title { text-decoration: line-through; }
+  .task-card.hidden { display: none; }
+
+  /* CHECKBOX */
+  .task-check {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .task-card.done .task-check {
+    background: var(--text);
+    border-color: var(--text);
+  }
+  .task-check svg { display: none; }
+  .task-card.done .task-check svg { display: block; }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .task-id {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .task-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+  .tag-bug        { background: var(--tag-bug-bg); color: var(--tag-bug); }
+  .tag-decision   { background: var(--tag-decision-bg); color: var(--tag-decision); }
+  .tag-awaiting   { background: var(--tag-awaiting-bg); color: var(--tag-awaiting); }
+  .tag-ready      { background: var(--tag-ready-bg); color: var(--tag-ready); }
+  .tag-compliance { background: var(--tag-compliance-bg); color: var(--tag-compliance); }
+  .tag-ux         { background: var(--tag-ux-bg); color: var(--tag-ux); }
+
+  .task-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .task-detail {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    font-weight: 300;
+  }
+
+  /* RESET BTN */
+  .reset-wrap {
+    padding: 0 48px;
+    margin-bottom: 32px;
+  }
+  .reset-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 32px 24px 28px; }
+    .filters { padding: 14px 24px; }
+    .main { padding: 28px 24px; }
+    .reset-wrap { padding: 0 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-label">pinnaclep3.com — website updates</div>
+  <h1 class="site-title">Developer<br>Task Guide</h1>
+  <div class="site-subtitle">Requested by Travis H &nbsp;·&nbsp; Check off tasks as they're completed</div>
+  <div class="progress-wrap">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <div class="progress-text" id="progressText">0 / 20 done</div>
+  </div>
+</header>
+
+<nav class="filters">
+  <span class="filter-label">Show</span>
+  <button class="filter-btn active" data-filter="all">All tasks</button>
+  <button class="filter-btn" data-filter="todo">To do</button>
+  <button class="filter-btn" data-filter="done">Completed</button>
+  <button class="filter-btn" data-filter="bug">Bug fixes</button>
+  <button class="filter-btn" data-filter="decision">Needs decision</button>
+  <button class="filter-btn" data-filter="awaiting">Awaiting content</button>
+  <button class="filter-btn" data-filter="ready">Ready to build</button>
+</nav>
+
+<div class="reset-wrap" style="margin-top:28px;">
+  <button class="reset-btn" id="resetBtn">↺ Reset all checkboxes</button>
+</div>
+
+<main class="main" id="main"></main>
+
+<script>
+const SECTIONS = [
+  { key: 'shop', color: '#1A3A5C', name: 'Shop page', tasks: [
+    { id: 'SHOP-01', tag: 'decision', tagLabel: 'Needs client decision', title: 'Vial size display', detail: 'Each product card currently shows a single vial size detail that doesn\'t reflect available options. Choose one of: (a) remove the vial size detail entirely, (b) add a clear label like "Multiple sizes available," or (c) create a separate product card per vial size.' },
+    { id: 'SHOP-02', tag: 'bug', tagLabel: 'Bug fix', title: 'Buy more, save more — fix pricing + show % saved', detail: 'Several products have broken "buy more, save more" tiers — audit and fix all. Also add a % savings label at each tier (e.g. "Save 10%", "Save 20%") so customers can see the value clearly without doing the math.' },
+    { id: 'SHOP-03', tag: 'awaiting', tagLabel: 'Awaiting client content', title: 'Add research supplies section', detail: 'Add a new product category for research supplies (needles, alcohol pads, draw barrel/needle setups, etc.). Some products will be listed as unavailable or "coming soon." Client needs to provide: product names, descriptions, pricing. Confirm whether product images are required or if placeholders can be used.' },
+  ]},
+  { key: 'bab', color: '#3B2B6E', name: 'Build a bundle (BAB)', tasks: [
+    { id: 'BAB-01', tag: 'bug', tagLabel: 'Bug fix', title: 'Remove stock count labels', detail: 'Remove all "X in stock" labels on BAB products and anywhere else they appear across the site.' },
+    { id: 'BAB-02', tag: 'bug', tagLabel: 'Bug fix', title: 'Fix mix & match quantity cap', detail: 'The "Mix and Match 6 (select up to 12)" label is misleading — users can add unlimited items. Enforce the stated limit or update the wording to match actual behavior.' },
+    { id: 'BAB-03', tag: 'decision', tagLabel: 'Needs client approval', title: 'Align BAB discount tiers', detail: 'Restructure BAB discounts to align with the product-page buy more/save more tiers. Proposed: 6–11 vials = 10% off; 12+ vials = 20% off ("Mega Bundle"). Confirm exact numbers with client before building.' },
+  ]},
+  { key: 'cart', color: '#1A4A2E', name: 'Cart', tasks: [
+    { id: 'CART-01', tag: 'bug', tagLabel: 'Bug fix', title: 'Cart overflow — can\'t reach checkout', detail: 'When the cart contains ~12+ products, the slide-out cart panel overflows with no scroll, hiding the Checkout and View Cart buttons. Add scroll to the cart item list so the footer buttons remain accessible at all times.' },
+  ]},
+  { key: 'pay', color: '#5C3A10', name: 'Payments', tasks: [
+    { id: 'PAY-01', tag: 'ux', tagLabel: 'UX rework needed', title: 'Zelle — update details & flow', detail: 'Remove the phone number option. Use only: sales@pinnaclep3.com and Zelle Tag ID: PinnacleP3. Rework the flow so instead of sending users back, show a message like "Your order is placed but won\'t be processed until Zelle payment of $[amount] is received." Explore whether a Zelle confirmation upload can unlock the place order button.' },
+    { id: 'PAY-02', tag: 'ready', tagLabel: 'Ready to build', title: 'Add Venmo as payment option', detail: 'Venmo details have been provided by Sean. Add Venmo as a checkout option. Confirm with the team if anything is missing.' },
+    { id: 'PAY-03', tag: 'awaiting', tagLabel: 'Awaiting client content', title: 'Add Cash App as payment option', detail: 'Sean is providing Cash App details — pending. Add once received.' },
+  ]},
+  { key: 'support', color: '#5C1A1A', name: 'Support page', tasks: [
+    { id: 'SUP-01', tag: 'decision', tagLabel: 'Needs decision', title: 'Live chat — clarify setup or remove', detail: '"Start Chat Now" button has no active link. Either integrate a chatbot (advise client on options and who sets it up), or remove the button until it is functional.' },
+    { id: 'SUP-02', tag: 'bug', tagLabel: 'Bug fix', title: 'Fix bulk orders dead link', detail: 'Bulk & Institutional Orders link is broken. Route it to sales@pinnaclep3.com.' },
+    { id: 'SUP-03', tag: 'awaiting', tagLabel: 'Awaiting client content', title: 'Update location', detail: 'Currently shows Boston, MA. Confirm correct address/location with client and update.' },
+    { id: 'SUP-04', tag: 'awaiting', tagLabel: 'Awaiting content', title: 'FAQ content', detail: 'Confirm with client who is providing FAQ content — developer or client. Once provided, populate the FAQ section.' },
+    { id: 'SUP-05', tag: 'compliance', tagLabel: 'Compliance sensitive', title: 'Revise Technical Assistance section', detail: 'Remove or reframe any language implying guidance on human use of peptides. Reframe around "how to conduct a research study" language only. Review all copy carefully for compliance risk.' },
+  ]},
+  { key: 'research', color: '#0D4040', name: 'Research page', tasks: [
+    { id: 'RES-01', tag: 'bug', tagLabel: 'Bug fix', title: 'Fix broken links', detail: 'Both links on the research page go nowhere. Fix or route to a "Coming Soon" placeholder. Any link or button site-wide without a destination should redirect to a styled Coming Soon page — not a 404 or dead end.' },
+    { id: 'RES-02', tag: 'compliance', tagLabel: 'Compliance sensitive', title: 'Clinical protocol link', detail: 'Link is not live. Before building, confirm with client what content goes here. They want to potentially mention their other company rather than provide clinical guidance. Do not publish anything that implies human use instructions.' },
+    { id: 'RES-03', tag: 'bug', tagLabel: 'Full audit needed', title: 'Site-wide dead link audit', detail: 'Audit every link and button across the entire site. Any without a live destination should be removed or pointed to a Coming Soon page. No broken links should remain anywhere.' },
+  ]},
+  { key: 'misc', color: '#3A3530', name: 'Miscellaneous', tasks: [
+    { id: 'MISC-01', tag: 'decision', tagLabel: 'Needs client decision', title: 'Social media links in footer', detail: 'Footer shows LinkedIn, Twitter, and Research icons. Remove any without live pages. Facebook and Instagram may be added — confirm with client which are ready. No dead social links.' },
+    { id: 'MISC-02', tag: 'ready', tagLabel: 'Ready to build', title: 'Discount rules', detail: 'Enforce: (1) No discount codes — other than affiliate 10% codes — can be applied to bundles/bulk orders. (2) Affiliate codes must remain active. (3) No combination of discounts may exceed 40% total.' },
+    { id: 'MISC-03', tag: 'awaiting', tagLabel: 'Awaiting client copy', title: 'Add terms & indemnity agreement at checkout', detail: 'Before order completion, require users to check a box agreeing to terms (indemnity/hold harmless/no human use clause). Client will write the copy. Implement as a required checkbox — order cannot be placed without it.' },
+    { id: 'MISC-04', tag: 'decision', tagLabel: 'Needs client approval on wording', title: 'Update shipping copy on home page', detail: 'Update footer/home page wording to indicate double-walled insulated packaging and temperature control for temperature-sensitive products. Do not guarantee temperature for freeze-dried products. Confirm final wording with client.' },
+    { id: 'MISC-05', tag: 'decision', tagLabel: 'Needs recommendation', title: 'Account registration — prompt users', detail: 'Users can complete a full purchase without registering and the option is easy to miss. Consider adding a prompt or pop-up encouraging account creation before/during checkout. Advise client on best UX approach.' },
+  ]},
+];
+
+const STORAGE_KEY = 'pinnaclep3_tasks_v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+}
+
+let state = loadState();
+let currentFilter = 'all';
+
+function totalTasks() {
+  return SECTIONS.reduce((a, s) => a + s.tasks.length, 0);
+}
+function doneTasks() {
+  return Object.values(state).filter(Boolean).length;
+}
+function updateProgress() {
+  const total = totalTasks();
+  const done = doneTasks();
+  const pct = total ? (done / total) * 100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} / ${total} done`;
+}
+
+function applyFilter() {
+  document.querySelectorAll('.task-card').forEach(card => {
+    const isDone = card.classList.contains('done');
+    const tagType = card.dataset.tag;
+    let show = true;
+    if (currentFilter === 'todo') show = !isDone;
+    else if (currentFilter === 'done') show = isDone;
+    else if (currentFilter === 'bug') show = tagType === 'bug';
+    else if (currentFilter === 'decision') show = tagType === 'decision';
+    else if (currentFilter === 'awaiting') show = tagType === 'awaiting';
+    else if (currentFilter === 'ready') show = tagType === 'ready';
+    card.classList.toggle('hidden', !show);
+  });
+}
+
+function render() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  SECTIONS.forEach(section => {
+    const wrap = document.createElement('div');
+    wrap.className = 'section';
+
+    const head = document.createElement('div');
+    head.className = 'section-head';
+    head.innerHTML = `
+      <div class="section-dot" style="background:${section.color}"></div>
+      <div class="section-name">${section.name}</div>
+      <div class="section-count">${section.tasks.length} task${section.tasks.length !== 1 ? 's' : ''}</div>
+    `;
+    wrap.appendChild(head);
+
+    section.tasks.forEach(task => {
+      const card = document.createElement('div');
+      card.className = 'task-card' + (state[task.id] ? ' done' : '');
+      card.dataset.tag = task.tag;
+      card.dataset.id = task.id;
+
+      card.innerHTML = `
+        <div class="task-check">
+          <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+            <path d="M1 4L4.5 7.5L11 1" stroke="#F5F3EE" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-body">
+          <div class="task-meta">
+            <span class="task-id">${task.id}</span>
+            <span class="task-tag tag-${task.tag}">${task.tagLabel}</span>
+          </div>
+          <div class="task-title">${task.title}</div>
+          <div class="task-detail">${task.detail}</div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        state[id] = !state[id];
+        saveState(state);
+        card.classList.toggle('done', state[id]);
+        updateProgress();
+        applyFilter();
+      });
+
+      wrap.appendChild(card);
+    });
+
+    main.appendChild(wrap);
+  });
+
+  updateProgress();
+  applyFilter();
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    applyFilter();
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (confirm('Reset all checkboxes?')) {
+    state = {};
+    saveState(state);
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
