@@ -14,26 +14,15 @@
     --border: #E2DDD5;
     --text: #1A1816;
     --muted: #7A756E;
-    --accent: #1A1816;
-
-    --shop: #1A3A5C;
-    --bab: #3B2B6E;
-    --cart: #1A4A2E;
-    --pay: #5C3A10;
-    --support: #5C1A1A;
-    --research: #0D4040;
-    --misc: #3A3530;
 
     --tag-bug-bg: #FDDEDE; --tag-bug: #8B1F1F;
     --tag-decision-bg: #FEF0CC; --tag-decision: #7A4008;
     --tag-awaiting-bg: #D8ECF8; --tag-awaiting: #124A7A;
     --tag-ready-bg: #D5EDD8; --tag-ready: #1A5C25;
     --tag-compliance-bg: #FDDEDE; --tag-compliance: #8B1F1F;
-    --tag-audit-bg: #FDDEDE; --tag-audit: #8B1F1F;
     --tag-ux-bg: #FEF0CC; --tag-ux: #7A4008;
   }
 
-  html { font-size: 16px; }
   body {
     background: var(--bg);
     color: var(--text);
@@ -43,7 +32,6 @@
     padding-bottom: 80px;
   }
 
-  /* HEADER */
   .site-header {
     background: var(--text);
     color: #F5F3EE;
@@ -89,8 +77,6 @@
     font-weight: 300;
     margin-bottom: 32px;
   }
-
-  /* PROGRESS BAR */
   .progress-wrap {
     display: flex;
     align-items: center;
@@ -116,8 +102,28 @@
     color: rgba(255,255,255,0.5);
     white-space: nowrap;
   }
+  .sync-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sync-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #A8D5BA;
+    animation: pulse 2s infinite;
+  }
+  .sync-dot.offline { background: #F5A623; animation: none; }
+  .sync-dot.error { background: #E24B4A; animation: none; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
 
-  /* FILTERS */
   .filters {
     padding: 20px 48px;
     background: var(--surface);
@@ -153,10 +159,8 @@
   .filter-btn:hover { border-color: var(--text); color: var(--text); }
   .filter-btn.active { background: var(--text); color: #F5F3EE; border-color: var(--text); }
 
-  /* MAIN */
   .main { padding: 40px 48px; max-width: 1000px; }
 
-  /* SECTION */
   .section { margin-bottom: 48px; }
   .section-head {
     display: flex;
@@ -166,25 +170,10 @@
     padding-bottom: 14px;
     border-bottom: 1px solid var(--border);
   }
-  .section-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .section-name {
-    font-family: 'Fraunces', serif;
-    font-size: 20px;
-    font-weight: 300;
-    color: var(--text);
-  }
-  .section-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-left: auto;
-  }
+  .section-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .section-name { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; }
+  .section-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); margin-left: auto; }
 
-  /* TASK CARD */
   .task-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -202,7 +191,6 @@
   .task-card.done .task-title { text-decoration: line-through; }
   .task-card.hidden { display: none; }
 
-  /* CHECKBOX */
   .task-check {
     width: 20px; height: 20px;
     border-radius: 5px;
@@ -213,27 +201,13 @@
     transition: all 0.2s;
     background: transparent;
   }
-  .task-card.done .task-check {
-    background: var(--text);
-    border-color: var(--text);
-  }
+  .task-card.done .task-check { background: var(--text); border-color: var(--text); }
   .task-check svg { display: none; }
   .task-card.done .task-check svg { display: block; }
 
   .task-body { flex: 1; min-width: 0; }
-  .task-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-  }
-  .task-id {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
+  .task-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .task-id { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.05em; }
   .task-tag {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -249,25 +223,10 @@
   .tag-compliance { background: var(--tag-compliance-bg); color: var(--tag-compliance); }
   .tag-ux         { background: var(--tag-ux-bg); color: var(--tag-ux); }
 
-  .task-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  .task-detail {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.65;
-    font-weight: 300;
-  }
+  .task-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+  .task-detail { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
 
-  /* RESET BTN */
-  .reset-wrap {
-    padding: 0 48px;
-    margin-bottom: 32px;
-  }
+  .reset-wrap { padding: 0 48px; margin-bottom: 32px; }
   .reset-btn {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -283,6 +242,24 @@
   }
   .reset-btn:hover { color: var(--text); border-color: var(--muted); }
 
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: #F5F3EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    transition: opacity 0.4s;
+  }
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+  .loading-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
   @media (max-width: 600px) {
     .site-header { padding: 32px 24px 28px; }
     .filters { padding: 14px 24px; }
@@ -293,6 +270,10 @@
 </head>
 <body>
 
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-text">Connecting...</div>
+</div>
+
 <header class="site-header">
   <div class="header-label">pinnaclep3.com — website updates</div>
   <h1 class="site-title">Developer<br>Task Guide</h1>
@@ -300,6 +281,10 @@
   <div class="progress-wrap">
     <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
     <div class="progress-text" id="progressText">0 / 20 done</div>
+  </div>
+  <div class="sync-status">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">Connecting to live sync...</span>
   </div>
 </header>
 
@@ -320,7 +305,23 @@
 
 <main class="main" id="main"></main>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDoDj8GrD9Gl6lyboXtvAorQUir1ml0NwQ",
+  authDomain: "pinnacle-p3-tasks.firebaseapp.com",
+  projectId: "pinnacle-p3-tasks",
+  storageBucket: "pinnacle-p3-tasks.firebasestorage.app",
+  messagingSenderId: "21873161059",
+  appId: "1:21873161059:web:754152f7530271f9859956"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const taskDocRef = doc(db, "tasks", "state");
+
 const SECTIONS = [
   { key: 'shop', color: '#1A3A5C', name: 'Shop page', tasks: [
     { id: 'SHOP-01', tag: 'decision', tagLabel: 'Needs client decision', title: 'Vial size display', detail: 'Each product card currently shows a single vial size detail that doesn\'t reflect available options. Choose one of: (a) remove the vial size detail entirely, (b) add a clear label like "Multiple sizes available," or (c) create a separate product card per vial size.' },
@@ -361,24 +362,13 @@ const SECTIONS = [
   ]},
 ];
 
-const STORAGE_KEY = 'pinnaclep3_tasks_v1';
-
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
-}
-function saveState(state) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
-}
-
-let state = loadState();
+let state = {};
 let currentFilter = 'all';
+let ignoreNextSnapshot = false;
 
-function totalTasks() {
-  return SECTIONS.reduce((a, s) => a + s.tasks.length, 0);
-}
-function doneTasks() {
-  return Object.values(state).filter(Boolean).length;
-}
+function totalTasks() { return SECTIONS.reduce((a, s) => a + s.tasks.length, 0); }
+function doneTasks() { return Object.values(state).filter(Boolean).length; }
+
 function updateProgress() {
   const total = totalTasks();
   const done = doneTasks();
@@ -402,28 +392,42 @@ function applyFilter() {
   });
 }
 
+function setSyncStatus(status) {
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  dot.className = 'sync-dot';
+  if (status === 'live') { label.textContent = 'Live — changes sync for everyone'; }
+  else if (status === 'saving') { dot.classList.add('offline'); label.textContent = 'Saving...'; }
+  else if (status === 'error') { dot.classList.add('error'); label.textContent = 'Sync error — changes may not save'; }
+}
+
+function updateCardStates() {
+  document.querySelectorAll('.task-card').forEach(card => {
+    const id = card.dataset.id;
+    card.classList.toggle('done', !!state[id]);
+  });
+  updateProgress();
+  applyFilter();
+}
+
 function render() {
   const main = document.getElementById('main');
   main.innerHTML = '';
   SECTIONS.forEach(section => {
     const wrap = document.createElement('div');
     wrap.className = 'section';
-
-    const head = document.createElement('div');
-    head.className = 'section-head';
-    head.innerHTML = `
-      <div class="section-dot" style="background:${section.color}"></div>
-      <div class="section-name">${section.name}</div>
-      <div class="section-count">${section.tasks.length} task${section.tasks.length !== 1 ? 's' : ''}</div>
+    wrap.innerHTML = `
+      <div class="section-head">
+        <div class="section-dot" style="background:${section.color}"></div>
+        <div class="section-name">${section.name}</div>
+        <div class="section-count">${section.tasks.length} task${section.tasks.length !== 1 ? 's' : ''}</div>
+      </div>
     `;
-    wrap.appendChild(head);
-
     section.tasks.forEach(task => {
       const card = document.createElement('div');
       card.className = 'task-card' + (state[task.id] ? ' done' : '');
       card.dataset.tag = task.tag;
       card.dataset.id = task.id;
-
       card.innerHTML = `
         <div class="task-check">
           <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
@@ -439,26 +443,30 @@ function render() {
           <div class="task-detail">${task.detail}</div>
         </div>
       `;
-
-      card.addEventListener('click', () => {
+      card.addEventListener('click', async () => {
         const id = card.dataset.id;
         state[id] = !state[id];
-        saveState(state);
         card.classList.toggle('done', state[id]);
         updateProgress();
         applyFilter();
+        setSyncStatus('saving');
+        try {
+          ignoreNextSnapshot = true;
+          await setDoc(taskDocRef, state);
+          setSyncStatus('live');
+        } catch(e) {
+          setSyncStatus('error');
+        }
       });
-
       wrap.appendChild(card);
     });
-
     main.appendChild(wrap);
   });
-
   updateProgress();
   applyFilter();
 }
 
+// Filters
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -468,15 +476,43 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if (confirm('Reset all checkboxes?')) {
+// Reset
+document.getElementById('resetBtn').addEventListener('click', async () => {
+  if (confirm('Reset all checkboxes for everyone?')) {
     state = {};
-    saveState(state);
-    render();
+    updateCardStates();
+    setSyncStatus('saving');
+    try {
+      ignoreNextSnapshot = true;
+      await setDoc(taskDocRef, state);
+      setSyncStatus('live');
+    } catch(e) { setSyncStatus('error'); }
   }
 });
 
-render();
+// Init — load from Firebase then listen for changes
+try {
+  const snap = await getDoc(taskDocRef);
+  if (snap.exists()) state = snap.data();
+  render();
+
+  // Real-time listener
+  onSnapshot(taskDocRef, (docSnap) => {
+    if (ignoreNextSnapshot) { ignoreNextSnapshot = false; return; }
+    if (docSnap.exists()) {
+      state = docSnap.data();
+      updateCardStates();
+    }
+  });
+
+  setSyncStatus('live');
+} catch(e) {
+  console.error(e);
+  setSyncStatus('error');
+  render();
+}
+
+document.getElementById('loadingOverlay').classList.add('hidden');
 </script>
 </body>
 </html>
